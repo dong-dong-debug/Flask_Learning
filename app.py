@@ -6,8 +6,6 @@ import os
 app = Flask(__name__)
 app.config.from_object(config)
 app.config['SECRET_KEY'] = os.urandom(24)  # 生成随机数种子，用于产生sessionID
-# app.config['SECRET_KEY'] = os.urandom(24)  # 生成随机数种子，用于产生sessionID
-# app.config['SECRET_KEY'] = os.urandom(24)  # 生成随机数种子，用于产生sessionID
 
 # 实例化db对象
 db = SQLAlchemy(app)
