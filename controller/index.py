@@ -21,4 +21,6 @@ def upload_file():
     remoute_file = "/home/zc/PPU/" + file_name
     file.save(local_file)  # 保存文件
     Python_Linux().upload_file(local_file, remoute_file)
+    Python_Linux().unzip_file()
+    Python_Linux().update_file()
     return '上传成功'
