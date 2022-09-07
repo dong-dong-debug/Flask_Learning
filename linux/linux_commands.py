@@ -1,5 +1,6 @@
 import paramiko
 import time
+import threading
 
 
 class Python_Linux:
@@ -68,6 +69,20 @@ class Python_Linux:
             time.sleep(2)
             execute.send('sed -i "s/2/100/g" /home/zc/PPU/bak/PPU_config.txt\n')
             time.sleep(2)
+
+    # 监控进程
+    def process_find(self):
+        self.connect()
+        with self.ssh.invoke_shell() as execute:
+            execute.send("top" + "\n")
+            time.sleep(3)
+            resp = execute.recv(65535)
+            print(resp.decode())
+
+        t1 = threading.Timer(3, self.process_find)  # 每1秒钟启动一次run函数.不是下面的t启动的
+        t1.start()
+        # 关闭连接
+        self.close()
 
 
 if __name__ == '__main__':
