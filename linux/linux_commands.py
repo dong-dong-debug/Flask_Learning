@@ -60,6 +60,7 @@ class Python_Linux:
             time.sleep(2)
             execute.send("unzip /home/zc/PPU/bak/test.zip -d /home/zc/PPU/bak/" + "\n")
             time.sleep(2)
+        self.close()
 
     # 修改文件
     def update_file(self):
@@ -69,12 +70,14 @@ class Python_Linux:
             time.sleep(2)
             execute.send('sed -i "s/2/100/g" /home/zc/PPU/bak/PPU_config.txt\n')
             time.sleep(2)
+        self.close()
 
     # 监控进程
     def process_find(self):
         self.connect()
         with self.ssh.invoke_shell() as execute:
             execute.send("top" + "\n")
+            # execute.send("top | grep xxx" + "\n")
             time.sleep(3)
             resp = execute.recv(65535)
             print(resp.decode())
