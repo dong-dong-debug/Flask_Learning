@@ -78,6 +78,7 @@ class Python_Linux:
         with self.ssh.invoke_shell() as execute:
             execute.send("top" + "\n")
             # execute.send("top | grep xxx" + "\n")
+            # execute.send("kill -9 pid" + "\n")
             time.sleep(3)
             resp = execute.recv(65535)
             print(resp.decode())
