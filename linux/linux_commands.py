@@ -88,6 +88,27 @@ class Python_Linux:
         # 关闭连接
         self.close()
 
+    # 监控python进程
+    def process_find_python(self):
+        self.connect()
+        stdin, stdout, stderr = self.ssh.exec_command("ps -ef | grep 'python /home/zc/PPU/bak/test.py'")
+        result = stdout.readlines()
+        self.close()
+        return result
+
+    # 启动python程序
+    def open_python_process(self):
+        self.connect()
+        self.ssh.exec_command("python /home/zc/PPU/bak/test.py")
+        self.close()
+
+    def kill_python_process(self,port):
+        self.connect()
+        with self.ssh.invoke_shell() as execute:
+            execute.send(f"kill -9 {port}" + "\n")
+            time.sleep(3)
+        self.close()
+
 
 if __name__ == '__main__':
     Python_Linux().unzip_file()
