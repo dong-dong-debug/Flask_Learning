@@ -24,3 +24,19 @@ def upload_file():
     Python_Linux().unzip_file()
     Python_Linux().update_file()
     return '上传成功'
+
+
+# 监控进程
+@index.route('/findprocess', methods=['GET', 'POST'])
+def find_process():
+    plinux = Python_Linux()
+    result = plinux.process_find_python()
+    print(result)
+    if result[0].__contains__('grep'):
+        print("程序未启动")
+        plinux.open_python_process()
+        print("程序已启动")
+        return 'TestProcess is restarted'
+    else:
+        print("程序已启动")
+        return 'TestProcess is running'

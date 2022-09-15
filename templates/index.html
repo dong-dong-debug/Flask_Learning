@@ -15,5 +15,11 @@
     </form>
 </div>
 
+<div style="border:2px dashed red;">
+    <form action="{{ url_for('index.find_process') }} " method="post" enctype=multipart/form-data>
+        <input type="submit" value="监测"/>
+    </form>
+</div>
+
 </body>
 </html>

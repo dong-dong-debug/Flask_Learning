@@ -91,7 +91,7 @@ class Python_Linux:
     # 监控python进程
     def process_find_python(self):
         self.connect()
-        stdin, stdout, stderr = self.ssh.exec_command("ps -ef | grep 'python /home/zc/PPU/bak/test.py'")
+        stdin, stdout, stderr = self.ssh.exec_command("ps -ef | grep 'python /home/zc/PPU/bak/TestProcess.py'")
         result = stdout.readlines()
         self.close()
         return result
@@ -99,7 +99,7 @@ class Python_Linux:
     # 启动python程序
     def open_python_process(self):
         self.connect()
-        self.ssh.exec_command("python /home/zc/PPU/bak/test.py")
+        self.ssh.exec_command("python /home/zc/PPU/bak/TestProcess.py")
         self.close()
 
     def kill_python_process(self,port):
