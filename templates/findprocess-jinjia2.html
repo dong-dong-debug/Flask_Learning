@@ -1,0 +1,21 @@
+<script>
+    window.onload = function (){
+    setInterval(function (){
+        document.form.submit()
+    },3000)
+        }
+</script>
+
+{% extends "base.html" %}
+{% block content %}
+    <form action="{{ url_for("index.find_process") }}" name="form" method="post">
+        <div class="col">
+            <button type="submit" class="btn btn-warning">实时进程监控</button>
+        </div>
+    </form>
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-danger" style="display: block;margin: 10px" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endblock %}

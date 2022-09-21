@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+    <script>
+        function jiangkong() {
+            $.ajax({
+                url: '/findprocess',
+                type: 'post',    // 发送post请求
+                success: function (data) {
+                    $("#message").css("display", 'block');
+                    if (data['status'] == '0') {
+                        $("#message").text("进程未开启")
+                    } else if (data['status'] == '1') {
+                        $("#message").text("进程正在运行,进程已经持续："+data['times'])
+                    } else {
+                        $("#message").text("进程已经重启,进程已经持续："+data['times'])
+                    }
+                }
+            });
+        }
+        function ssjiangkong() {
+            setInterval(function () {
+                jiangkong()
+            }, 5000)
+        }
+    </script>
+    <div class="col">
+        <button type="submit" class="btn btn-warning" onclick="ssjiangkong()">实时进程监控</button>
+    </div>
+    <div class="alert alert-danger" style="display: none;margin: 10px" role="alert" id="message">
+    </div>
+{% endblock %}
+

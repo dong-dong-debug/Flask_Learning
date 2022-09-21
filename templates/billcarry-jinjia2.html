@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+    <form action="{{ url_for("index.bill_carry") }}" method="post">
+        <div class="form-row">
+            <div class="col">
+                <input type="text" class="form-control" name="source" placeholder="源话单路径">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" name="dest" placeholder="目的路径">
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary ">启动</button>
+            </div>
+
+            {#            <div class="col">#}
+            {#                <button type="submit" class="btn btn-primary ">暂停</button>#}
+            {#            </div>#}
+        </div>
+    </form>
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-danger" style="display: block;margin: 10px" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endblock %}
