@@ -91,7 +91,7 @@ class Python_Linux:
     # 监控python进程
     def process_find_python(self):
         self.connect()
-        stdin, stdout, stderr = self.ssh.exec_command("ps -ef | grep 'python /home/zc/PPU/bak/TestProcess.py'")
+        stdin, stdout, stderr = self.ssh.exec_command("ps -ef | grep TestProcess.py")
         result = stdout.readlines()
         self.close()
         return result
@@ -102,12 +102,75 @@ class Python_Linux:
         self.ssh.exec_command("python /home/zc/PPU/bak/TestProcess.py")
         self.close()
 
-    def kill_python_process(self,port):
+    # 杀死进程
+    def kill_python_process(self, port):
         self.connect()
         with self.ssh.invoke_shell() as execute:
             execute.send(f"kill -9 {port}" + "\n")
             time.sleep(3)
         self.close()
+
+    # 监控进程状态
+    def process_find_python_status(self):
+        # status 0:未启动  1：正在启动  2：已重启
+        result = self.process_find_python()
+        if result[0].__contains__('grep'):
+            print("程序未启动")
+            status = 0
+            times = 0
+        else:
+            port = result[0].split()[1]  # 获取端口号码
+            times = self.find_process_livetime(port)
+            print(f"进程已经持续{times[1]}")
+            data = times[1].split(':')
+            if len(data) < 3:
+                status = 1
+                islive = int(data[0]) < 1
+                if islive:
+                    status = 2
+        return status, times
+
+    # 查看进程存活时间
+    def find_process_livetime(self, port):
+        self.connect()
+        stdin, stdout, stderr = self.ssh.exec_command(f"ps -p {port} -o etime")
+        result = stdout.readlines()
+        self.close()
+        return result
+
+    # 查询文件夹文件个数
+    def find_file_nummber(self, filepath):
+        self.connect()
+        stdin, stdout, stderr = self.ssh.exec_command(f'ls {filepath} -l |grep "^-"|wc -l')
+        result = stdout.readlines()
+        self.close()
+        return result[0]
+
+    # 移动文件到指定位置
+    def form_source_to_dest(self, sourcepath, destpath):
+        result = self.find_filename(sourcepath)
+        print(result[2].strip())
+        print(len(result))
+        print(result)
+        self.connect()
+        for i in range(len(result)):
+            sourcefile = sourcepath + "/" + result[i].strip()
+            print(sourcefile)
+            destfile = destpath + "/" + result[i].strip()
+            print(destfile)
+            command = "mv " + sourcefile + " " + destfile
+            print(command)
+            self.ssh.exec_command(command)
+        self.close()
+        return result
+
+    # 查看指定文件夹下所有文件名称
+    def find_filename(self, filepath):
+        self.connect()
+        stdin, stdout, stderr = self.ssh.exec_command(f"ls {filepath}")
+        result = stdout.readlines()
+        self.close()
+        return result
 
 
 if __name__ == '__main__':
