@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
     <script>
+    $(document).ready(function(){
+            var ssjk = $("#ssjk").val()
+            if(ssjk == "实时监控"){
+                $("#jiankong").addClass("active")
+            }
+        })
         function jiangkong() {
             $.ajax({
                 url: '/findprocess',
@@ -23,6 +29,7 @@
             }, 5000)
         }
     </script>
+    <input type="text" class="form-control" id="ssjk" style="display: none" value="实时监控">
     <div class="col">
         <button type="submit" class="btn btn-warning" onclick="ssjiangkong()">实时进程监控</button>
     </div>

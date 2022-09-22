@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
     <script>
+        $(document).ready(function(){
+            var hdjc = $("#hdjc").val()
+            console.log(hdjc)
+            if(hdjc == "话单监测"){
+                $("#huadan").addClass("active")
+            }
+        })
         function movefile() {
             var source = $("#source").val()
             var dest = $("#dest").val()
@@ -9,14 +16,15 @@
                 console.log(data["num"])
                 $("#message").css("display", 'block');
                 if (data["status"] == 'un-normal') {
-                    $("#message").text("文件夹有"+data["num"]+"个文件,数量超标,已经移动到目标文件夹")
+                    $("#message").text("文件夹有" + data["num"] + "个文件,数量超标,已经移动到目标文件夹")
                 } else {
-                    $("#message").text("文件夹有"+data["num"]+"个文件,数量正常")
+                    $("#message").text("文件夹有" + data["num"] + "个文件,数量正常")
                 }
             })
         }
 
         var interval;
+
         function mvfile() {
             if (interval != undefined) {
 
@@ -26,6 +34,7 @@
                 }, 5000)
             }
         }
+
         function stopmvfile() {
             clearInterval(interval);
             interval = undefined;
@@ -33,6 +42,7 @@
     </script>
 
     <div class="form-row">
+        <input type="text" class="form-control" id="hdjc" style="display: none" value="话单监测">
         <div class="col">
             <input type="text" class="form-control" id="source" placeholder="源话单路径">
         </div>

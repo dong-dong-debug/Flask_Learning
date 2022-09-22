@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, flash, redirect, url_for, jsonify
+from flask import Blueprint, request, render_template, flash, redirect, url_for
 from common.decorators import login_required
 from linux.linux_commands import Python_Linux
 import os
@@ -29,9 +29,17 @@ index = Blueprint("index", __name__)
 #         return redirect(url_for("index.upload_file"))
 
 
-# 文件上传解到指定目录
+
+@index.route('/', methods=['GET', 'POST'])
 @login_required
+def idx():
+    if request.method == 'GET':
+        return render_template('index.html')
+
+
+# 文件上传解到指定目录
 @index.route('/upload', methods=['GET', 'POST'])
+@login_required
 def upload_file():
     if request.method == 'GET':
         return render_template('index.html')
@@ -84,8 +92,8 @@ def upload_file():
 
 
 # 监控进程
-@login_required
 @index.route('/findprocess', methods=['GET', 'POST'])
+@login_required
 def find_process():
     if request.method == 'GET':
         return render_template("findprocess.html")
