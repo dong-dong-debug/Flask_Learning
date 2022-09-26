@@ -15,7 +15,7 @@ def login():
         result = user.find_by_username(username)
         if len(result) == 1 and result[0].password == password:
             session['username'] = username
-            return redirect(url_for("index.upload_file"))
+            return redirect(url_for("index.idx"))
         else:
             flash("邮箱和密码不匹配！")
             return redirect(url_for("user.login"))

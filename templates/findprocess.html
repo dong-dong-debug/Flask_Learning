@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
     <script>
-    $(document).ready(function(){
+        $(document).ready(function () {
             var ssjk = $("#ssjk").val()
-            if(ssjk == "实时监控"){
+            if (ssjk == "实时监控") {
                 $("#jiankong").addClass("active")
             }
         })
+
         function jiangkong() {
             $.ajax({
                 url: '/findprocess',
@@ -15,15 +16,19 @@
                     $("#message").css("display", 'block');
                     if (data['status'] == '0') {
                         $("#message").text("进程未开启")
+                        $("#message").removeClass("alert-success")
+                        $("#message").addClass("alert-danger")
                     } else if (data['status'] == '1') {
-                        $("#message").text("进程正在运行,进程已经持续："+data['times'])
+                        $("#message").text("进程正在运行,进程已经持续：" + data['times'])
                     } else {
-                        $("#message").text("进程已经重启,进程已经持续："+data['times'])
+                        bootbox.alert({'title': '错误提示', 'message': '进程已经重启.'})
+                        $("#message").text("进程已经重启,进程已经持续：" + data['times'])
                     }
                 }
             });
         }
-        function ssjiangkong() {
+
+         function ssjiangkong() {
             setInterval(function () {
                 jiangkong()
             }, 5000)
@@ -33,7 +38,7 @@
     <div class="col">
         <button type="submit" class="btn btn-warning" onclick="ssjiangkong()">实时进程监控</button>
     </div>
-    <div class="alert alert-danger" style="display: none;margin: 10px" role="alert" id="message">
+    <div class="alert alert-success" style="display: none;margin: 10px" role="alert" id="message">
     </div>
 {% endblock %}
 

@@ -1,13 +1,10 @@
 import paramiko
 import time
 import threading
-from module.process import Process
 
 
 class Python_Linux:
     def __init__(self):
-        self.thread = None
-        self.running = False
         self.ip = "192.168.137.100"
         self.port = "22"
         self.user = "root"
@@ -182,36 +179,6 @@ class Python_Linux:
         print(command)
         self.ssh.exec_command(command)
         self.close()
-
-    # 根据文件数量移动位置
-    def form_source_to_dest_by_num(self, sourcepath, destpath):
-        num = self.find_file_nummber(sourcepath)
-        if int(num) >= 10:
-            self.form_source_to_dest(sourcepath, destpath)
-        if self.running:
-            self.thread = threading.Timer(5, self.form_source_to_dest_by_num,
-                                          kwargs={"sourcepath": sourcepath, "destpath": destpath})
-            self.thread.start()
-
-    def active_carry(self, sourcepath, destpath):
-        self.running = True
-        thread = threading.Timer(5, self.form_source_to_dest_by_num,
-                                 kwargs={"sourcepath": sourcepath, "destpath": destpath})
-        thread.start()
-
-    # 关闭搬运任务
-    def close_carry(self):
-        self.running = False
-
-    # 定时查看状态并插入数据库
-    def repeat_find_process(self):
-        status, times = self.process_find_python_status()
-        if times != 0:
-            times = str(times[1].strip())
-        Process().insert_process(status, times)
-        print("1")
-        thread = threading.Timer(10, self.repeat_find_process)
-        thread.start()
 
 
 if __name__ == '__main__':

@@ -12,32 +12,35 @@
             var source = $("#source").val()
             var dest = $("#dest").val()
             param = "source=" + source + "&dest=" + dest
-            $.post('/billcarry', param, function (data) {
-                console.log(data["num"])
-                $("#message").css("display", 'block');
-                if (data["status"] == 'un-normal') {
-                    $("#message").text("文件夹有" + data["num"] + "个文件,数量超标,已经移动到目标文件夹")
-                } else {
-                    $("#message").text("文件夹有" + data["num"] + "个文件,数量正常")
+            $.post('/open', param, function (data) {
+                {#$("#message").css("display", 'block');#}
+                if (data["status"] == 'normal') {
+                    window.location.reload()
+                } else if (data["status"] == 'exists'){
+                    bootbox.alert({'title': '错误提示', 'message': '该任务已存在.'})
+                }
+                else if (data["status"] == 'live'){
+                    bootbox.alert({'title': '错误提示', 'message': '已有任务存在，请先结束任务！'})
+                }else {
+                    window.location.reload()
                 }
             })
         }
 
-        var interval;
-
-        function mvfile() {
-            if (interval != undefined) {
-
-            } else {
-                interval = setInterval(function () {
-                    movefile()
-                }, 5000)
-            }
-        }
-
         function stopmvfile() {
-            clearInterval(interval);
-            interval = undefined;
+            var source = $("#source").val()
+            var dest = $("#dest").val()
+            param = "source=" + source + "&dest=" + dest
+            $.post('/close', param, function (data) {
+                if (data == 'no-find') {
+                    bootbox.alert({'title': '错误提示', 'message': '没有找到指定目录.'})
+                    window.location.reload()
+                } else {
+                    bootbox.alert({'title': '错误提示', 'message': '已暂停.'})
+                    window.location.reload()
+
+                }
+            })
         }
     </script>
 
@@ -51,13 +54,18 @@
         </div>
 
         <div class="col">
-            <button type="submit" class="btn btn-primary " onclick="mvfile()">启动</button>
+            <button type="submit" class="btn btn-primary " onclick="movefile()">启动</button>
         </div>
 
         <div class="col">
             <button type="submit" class="btn btn-primary " onclick="stopmvfile()">暂停</button>
         </div>
     </div>
-    <div class="alert alert-danger" style="display: none;margin: 10px" role="alert" id="message">
+    {% for path in list %}
+    <div class="alert alert-success" style="display: block;margin: 10px" role="alert">
+    {{ "正在监控"+path[0]+"目录,备份目录为:" +path[1]}}
+    </div>
+    {% endfor %}
+    <div class="alert alert-success" style="display: none;margin: 10px" role="alert" id="message">
     </div>
 {% endblock %}
